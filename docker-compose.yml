@@ -1,0 +1,70 @@
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  default:
+    name: interview
+    external: false
+
+services:
+  postgres:
+    image: docker.arvancloud.ir/postgres:16-alpine
+    container_name: postgres_interview
+    ports:
+      - ${POSTGRES_PORT}:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_interview
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - ${PGADMIN_DEFAULT_PORT}:443
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: 'True'
+      PGADMIN_LISTEN_PORT: 443
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  interview-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: interview_backend_app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASS=${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/api/v1/ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+#    restart: always
+
+configs:
+  project_env:
+    file: ./.env
