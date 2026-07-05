@@ -15,6 +15,7 @@ public class BookDto {
     @AllArgsConstructor
     @EqualsAndHashCode
     @ToString
+    @Builder
     public static final class CommandBookDto {
         @NotBlank(message = "{error.book.title.required}")
         private String title;
@@ -24,12 +25,17 @@ public class BookDto {
         private String isbn;
         @NotNull(message = "{error.book.publish_year.required}")
         private Integer publishYear;
+
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-        private Boolean isAvailable;
+        @Builder.Default
+        private Boolean isAvailable = true;
+
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-        private Boolean isDeleted;
+        @Builder.Default
+        private Boolean isDeleted = false;
+
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @Schema(accessMode = Schema.AccessMode.READ_ONLY)
         private UUID id;

@@ -12,7 +12,7 @@ public interface BookService {
 
     BookDto.CommandBookDto update(BookDto.CommandBookDto dto);
 
-    void deleteById(String bookId);
+    void deleteByIsbn(String bookId);
 
     BookDto.CommandBookDto findByIsbn(String isbn);
 

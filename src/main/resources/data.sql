@@ -29,6 +29,6 @@ SELECT * FROM (VALUES
         (gen_random_uuid(), NOW(), NOW(), 'admin', 'admin', true, false, 2013, 'یاسمن صفوی', '978-964-000-027-7', 'آیینهٔ مبهم'),
         (gen_random_uuid(), NOW(), NOW(), 'admin', 'admin', true, false, 1996, 'شهاب مرادی', '978-964-000-028-8', 'آخرین قطعه از پازل'),
         (gen_random_uuid(), NOW(), NOW(), 'admin', 'admin', true, false, 2007, 'ترانه حسنی', '978-964-000-029-9', 'جاده‌های بی‌انتهای ذهن'),
-        (gen_random_uuid(), NOW(), NOW(), 'admin', 'admin', true, false, 2021, 'کیومرث افشاری', '978-964-000-030-0', 'روزهایی که هرگز نبودند')
+        (gen_random_uuid(), NOW(), NOW(), 'admin', 'admin', true, true, 2021, 'کیومرث افشاری', '978-964-000-030-0', 'روزهایی که هرگز نبودند')
     ) AS data (id, created_at, updated_at, created_by, modified_by, is_available, is_deleted, published_year, author_name, isbn, title)
 WHERE NOT EXISTS (SELECT 1 FROM core.book LIMIT 1);

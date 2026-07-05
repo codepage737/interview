@@ -6,6 +6,7 @@ import com.shahrabi.interview.repository.main.BookRepository;
 import com.shahrabi.interview.service.main.BookService;
 import com.shahrabi.interview.service.main.dto.BookDto;
 import com.shahrabi.interview.service.main.exception.BookAlreadyBorrowedException;
+import com.shahrabi.interview.service.main.exception.BookAlreadyDeletedException;
 import com.shahrabi.interview.service.main.exception.BookNotBorrowedException;
 import com.shahrabi.interview.service.main.exception.DuplicateIsbnException;
 import com.shahrabi.interview.service.main.mapper.impl.BookMapper;
@@ -51,6 +52,9 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public BookDto.CommandBookDto update(BookDto.CommandBookDto dto) {
         Book book = repository.findByIsbn(dto.getIsbn()).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
+        if (book.getIsDeleted()) {
+            throw new BookAlreadyDeletedException("error.book.operation.already_deleted");
+        }
         mapper.update(book, dto);
         Book save = repository.save(book);
         return mapper.toDto(save);
@@ -58,7 +62,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteById(String isbnId) {
+    public void deleteByIsbn(String isbnId) {
         Book book = repository.findByIsbn(isbnId).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
         if (book.getIsAvailable()) {
             book.setIsDeleted(Boolean.TRUE);
@@ -78,6 +82,9 @@ public class BookServiceImpl implements BookService {
         Book book = repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
         if (!book.getIsAvailable()) {
             throw new BookAlreadyBorrowedException("error.book.operation.active_loan");
+        }
+        if (book.getIsDeleted()) {
+            throw new BookAlreadyDeletedException("error.book.operation.already_deleted");
         }
         book.setIsAvailable(Boolean.FALSE);
         return mapper.toDto(book);
