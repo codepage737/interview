@@ -1,11 +1,9 @@
 package com.shahrabi.interview.domain.main;
 
 import com.shahrabi.interview.domain.AbstractAuditingEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.UUID;
@@ -22,7 +20,7 @@ import java.util.UUID;
 public class Book extends AbstractAuditingEntity<UUID> {
 
     // https://en.wikipedia.org/wiki/ISBN
-    @Column(name = "ISBN", nullable = false, unique = true, updatable = false, length = 20)
+    @Column(name = "isbn", nullable = false, unique = true, updatable = false, length = 20)
     private String isbn;
 
     @Column(name = "title", nullable = false, length = 128)
@@ -35,8 +33,11 @@ public class Book extends AbstractAuditingEntity<UUID> {
     private Integer publishYear;
 
     @Column(name = "is_active", nullable = false)
-    private Boolean isAvailable = true;
+    private Boolean isAvailable;
 
     @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
+    private Boolean isDeleted;
+
+    @Version
+    private Long version;
 }

@@ -5,6 +5,8 @@ import com.shahrabi.interview.domain.main.Book;
 import com.shahrabi.interview.repository.main.BookRepository;
 import com.shahrabi.interview.service.main.BookService;
 import com.shahrabi.interview.service.main.dto.BookDto;
+import com.shahrabi.interview.service.main.exception.BookAlreadyBorrowedException;
+import com.shahrabi.interview.service.main.exception.DuplicateIsbnException;
 import com.shahrabi.interview.service.main.mapper.impl.BookMapper;
 import com.shahrabi.interview.service.main.specification.BookSpecification;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,11 +17,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
-public class BookServiceImpl implements BookService {
+public class
+BookServiceImpl implements BookService {
 
     private final BookMapper mapper;
     private final BookRepository repository;
@@ -37,15 +38,19 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDto.CommandBookDto saveBook(BookDto.CommandBookDto dto) {
-        Book entity = mapper.toEntity(dto);
-        Book save = repository.save(entity);
-        return mapper.toDto(save);
+        if (repository.existsByIsbn(dto.getIsbn())) {
+            throw new DuplicateIsbnException("error.book.isbn.duplicate");
+        } else {
+            Book entity = mapper.toEntity(dto);
+            Book save = repository.save(entity);
+            return mapper.toDto(save);
+        }
     }
 
     @Override
     @Transactional
     public BookDto.CommandBookDto update(BookDto.CommandBookDto dto) {
-        Book book = repository.findByIsbn(dto.getIsbn()).orElseThrow(() -> new EntityNotFoundException(" id= " + dto.getIsbn()));
+        Book book = repository.findByIsbn(dto.getIsbn()).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
         mapper.update(book, dto);
         Book save = repository.save(book);
         return mapper.toDto(save);
@@ -53,7 +58,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Void deleteById(UUID bookId) {
-        return null;
+    public void deleteById(String isbnId) {
+        Book book = repository.findByIsbn(isbnId).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
+        if (book.getIsAvailable()) {
+            book.setIsDeleted(Boolean.TRUE);
+            repository.save(book);
+        } else {
+            throw new BookAlreadyBorrowedException("error.book.delete.active_loan");
+        }
     }
 }
