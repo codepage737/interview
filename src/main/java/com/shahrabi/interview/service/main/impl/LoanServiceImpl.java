@@ -48,7 +48,6 @@ public class LoanServiceImpl implements LoanService {
                 .loanDate(LocalDateTime.now()).build();
         Loan entity = mapper.toEntity(loanBookDto);
         Loan save = repository.save(entity);
-        LoanDto.CommandLoanBookDto reportDto = mapper.toDto(save);
         return loanBookDto;
     }
 
