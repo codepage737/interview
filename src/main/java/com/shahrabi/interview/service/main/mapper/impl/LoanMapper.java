@@ -9,19 +9,19 @@ import org.mapstruct.MappingTarget;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface LoanMapper extends BaseMapper<Loan, LoanDto> {
+public interface LoanMapper extends BaseMapper<Loan, LoanDto.CommandLoanBookDto> {
     @Override
-    LoanDto toDto(Loan loan);
+    LoanDto.CommandLoanBookDto toDto(Loan loan);
 
     @Override
-    Loan toEntity(LoanDto loanDto);
+    Loan toEntity(LoanDto.CommandLoanBookDto commandLoanBookDto);
 
     @Override
-    List<LoanDto> toDtoList(List<Loan> entities);
+    List<LoanDto.CommandLoanBookDto> toDtoList(List<Loan> entities);
 
     @Override
-    List<Loan> toEntityList(List<LoanDto> dtos);
+    List<Loan> toEntityList(List<LoanDto.CommandLoanBookDto> dtos);
 
     @Override
-    void update(@MappingTarget Loan loan, LoanDto loanDto);
+    void update(@MappingTarget Loan loan, LoanDto.CommandLoanBookDto commandLoanBookDto);
 }

@@ -19,8 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class
-BookServiceImpl implements BookService {
+public class BookServiceImpl implements BookService {
 
     private final BookMapper mapper;
     private final BookRepository repository;
@@ -62,9 +61,13 @@ BookServiceImpl implements BookService {
         Book book = repository.findByIsbn(isbnId).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
         if (book.getIsAvailable()) {
             book.setIsDeleted(Boolean.TRUE);
-            repository.save(book);
         } else {
-            throw new BookAlreadyBorrowedException("error.book.delete.active_loan");
+            throw new BookAlreadyBorrowedException("error.book.operation.active_loan");
         }
+    }
+
+    @Override
+    public Book findByIsbn(String isbn) {
+        return repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
     }
 }

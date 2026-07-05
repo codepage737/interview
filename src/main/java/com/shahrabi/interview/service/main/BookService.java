@@ -1,6 +1,7 @@
 package com.shahrabi.interview.service.main;
 
 import com.shahrabi.interview.common.http.PagedResponseDto;
+import com.shahrabi.interview.domain.main.Book;
 import com.shahrabi.interview.service.main.dto.BookDto;
 import org.springframework.data.domain.Pageable;
 
@@ -13,4 +14,6 @@ public interface BookService {
     BookDto.CommandBookDto update(BookDto.CommandBookDto dto);
 
     void deleteById(String bookId);
+
+    Book findByIsbn(String isbn);
 }

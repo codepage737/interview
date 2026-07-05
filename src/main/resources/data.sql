@@ -1,4 +1,4 @@
-INSERT INTO core.book (id, created_at, updated_at, created_by, modified_by, is_active, is_deleted, published_year, author_name, isbn, title)
+INSERT INTO core.book (id, created_at, updated_at, created_by, modified_by, is_available, is_deleted, published_year, author_name, isbn, title)
 SELECT * FROM (VALUES
         (gen_random_uuid(), NOW(), NOW(), 'admin', 'admin', true, false, 1984, 'رزا مرتضوی', '978-964-000-001-1', 'خانه‌ای در مه'),
         (gen_random_uuid(), NOW(), NOW(), 'admin', 'admin', true, false, 2005, 'پیمان سلیمانی', '978-964-000-002-2', 'پشت پنجره‌های بسته'),
@@ -30,5 +30,5 @@ SELECT * FROM (VALUES
         (gen_random_uuid(), NOW(), NOW(), 'admin', 'admin', true, false, 1996, 'شهاب مرادی', '978-964-000-028-8', 'آخرین قطعه از پازل'),
         (gen_random_uuid(), NOW(), NOW(), 'admin', 'admin', true, false, 2007, 'ترانه حسنی', '978-964-000-029-9', 'جاده‌های بی‌انتهای ذهن'),
         (gen_random_uuid(), NOW(), NOW(), 'admin', 'admin', true, false, 2021, 'کیومرث افشاری', '978-964-000-030-0', 'روزهایی که هرگز نبودند')
-    ) AS data (id, created_at, updated_at, created_by, modified_by, is_active, is_deleted, published_year, author_name, isbn, title)
+    ) AS data (id, created_at, updated_at, created_by, modified_by, is_available, is_deleted, published_year, author_name, isbn, title)
 WHERE NOT EXISTS (SELECT 1 FROM core.book LIMIT 1);

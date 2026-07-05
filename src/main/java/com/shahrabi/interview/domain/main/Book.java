@@ -32,10 +32,12 @@ public class Book extends AbstractAuditingEntity<UUID> {
     @Column(name = "published_year", nullable = false)
     private Integer publishYear;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_available", nullable = false)
+    @ColumnDefault("true")
     private Boolean isAvailable;
 
     @Column(name = "is_deleted", nullable = false)
+    @ColumnDefault("false")
     private Boolean isDeleted;
 
     @Version

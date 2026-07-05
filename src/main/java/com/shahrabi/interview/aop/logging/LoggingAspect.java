@@ -30,8 +30,8 @@ public class LoggingAspect {
     // Pointcut that matches all repositories, services and Web REST endpoints.
     @Pointcut(
             "within(@org.springframework.stereotype.Repository *)" +
-            " || within(@org.springframework.stereotype.Service *)" +
-            " || within(@org.springframework.web.bind.annotation.RestController *)"
+                    " || within(@org.springframework.stereotype.Service *)" +
+                    " || within(@org.springframework.web.bind.annotation.RestController *)"
     )
     public void springBeanPointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
@@ -40,10 +40,11 @@ public class LoggingAspect {
     // Pointcut that matches all Spring beans in the application's main packages.
     @Pointcut(
             "within(com.shahrabi.interview.repository..*)" +
-            " || within(com.shahrabi.interview.service..*)" +
-            " || within(com.shahrabi.interview.web.rest..*)"
+                    " || within(com.shahrabi.interview.service..*)" +
+                    " || within(com.shahrabi.interview.web.rest..*)"
     )
-    public void applicationPackagePointcut() {}
+    public void applicationPackagePointcut() {
+    }
 
     @AfterThrowing(pointcut = "applicationPackagePointcut() && springBeanPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {

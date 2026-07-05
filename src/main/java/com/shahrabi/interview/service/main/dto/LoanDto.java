@@ -25,6 +25,20 @@ public class LoanDto {
     @AllArgsConstructor
     @EqualsAndHashCode
     @ToString
+    @Builder
+    public static final class CommandLoanBookDto {
+        private UUID bookId;
+        private String isbn;
+        private String borrowerName;
+        private LocalDateTime loanDate;
+        private LocalDateTime returnDate;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @ToString
     public static final class QueryLoanDto {
         private String bookTitle;
         private String isbn;

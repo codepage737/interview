@@ -1,6 +1,7 @@
 package com.shahrabi.interview.common.exception;
 
 import com.shahrabi.interview.service.main.exception.BookAlreadyBorrowedException;
+import com.shahrabi.interview.service.main.exception.BookNotBorrowedException;
 import com.shahrabi.interview.service.main.exception.DuplicateIsbnException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -60,9 +61,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-
     @ExceptionHandler(BookAlreadyBorrowedException.class)
     public ResponseEntity<ErrorResponse> handleBookAlreadyBorrowedException(BookAlreadyBorrowedException ex, Locale locale) {
+        String message = messageSource.getMessage(ex.getMessage(), null, locale);
+        ErrorResponse error = new ErrorResponse(false, message, System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BookNotBorrowedException.class)
+    public ResponseEntity<ErrorResponse> handleBookNotBorrowedException(BookNotBorrowedException ex, Locale locale) {
         String message = messageSource.getMessage(ex.getMessage(), null, locale);
         ErrorResponse error = new ErrorResponse(false, message, System.currentTimeMillis());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);

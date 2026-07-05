@@ -32,15 +32,17 @@ CREATE TABLE IF NOT EXISTS core.book
     -- Inherited from table public.base_table: updated_at timestamp(3) with time zone,
     -- Inherited from table public.base_table: created_by character varying(32) COLLATE pg_catalog."default" NOT NULL,
     -- Inherited from table public.base_table: modified_by character varying(32) COLLATE pg_catalog."default",
-    is_active boolean NOT NULL,
-    is_deleted boolean NOT NULL,
+    is_available boolean NOT NULL DEFAULT true,
+    is_deleted boolean NOT NULL DEFAULT false,
     published_year integer NOT NULL,
     author_name character varying(32) COLLATE pg_catalog."default" NOT NULL,
     isbn character varying(20) COLLATE pg_catalog."default" NOT NULL,
     title character varying(128) COLLATE pg_catalog."default" NOT NULL,
+    version bigint DEFAULT 0,
     CONSTRAINT book_pkey PRIMARY KEY (id),
     CONSTRAINT book_isbn_key UNIQUE (isbn)
-) INHERITS (public.base_table)
+    )
+    INHERITS (public.base_table)
 
     TABLESPACE pg_default;
 
@@ -63,11 +65,15 @@ CREATE TABLE IF NOT EXISTS core.loan
     borrower_name character varying(32) COLLATE pg_catalog."default" NOT NULL,
     loan_date timestamp(3) without time zone NOT NULL,
     return_date timestamp(3) without time zone,
-    CONSTRAINT loan_pkey PRIMARY KEY (id)
-) INHERITS (public.base_table)
+    CONSTRAINT loan_pkey PRIMARY KEY (id),
+    CONSTRAINT loan_book_id_fkey FOREIGN KEY (book_id)
+    REFERENCES core.book (id) MATCH SIMPLE
+                           ON UPDATE NO ACTION
+                           ON DELETE NO ACTION
+    )
+    INHERITS (public.base_table)
 
     TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS core.loan
     OWNER to admin;
-
