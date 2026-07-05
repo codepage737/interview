@@ -15,5 +15,9 @@ public interface BookService {
 
     void deleteById(String bookId);
 
-    Book findByIsbn(String isbn);
+    BookDto.CommandBookDto findByIsbn(String isbn);
+
+    BookDto.CommandBookDto markBookAsAvailableAndReturn(String isbn);
+
+    BookDto.CommandBookDto markBookAsUnAvailableAndReturn(String isbn);
 }

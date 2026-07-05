@@ -24,12 +24,15 @@ public class BookDto {
         private String isbn;
         @NotNull(message = "{error.book.publish_year.required}")
         private Integer publishYear;
-//        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//        @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-//        private Boolean isAvailable;
-//        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//        @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-//        private Boolean isDeleted;
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+        private Boolean isAvailable;
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+        private Boolean isDeleted;
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+        private UUID id;
     }
 
     @Data

@@ -10,7 +10,7 @@ public record PagedResponseDto<T> (
     int pageSize,
     long totalElements,
     int totalPages,
-    boolean isLas
+    boolean isLast
 ) {
     public PagedResponseDto(Page<T> page) {
         this(

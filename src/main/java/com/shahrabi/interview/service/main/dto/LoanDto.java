@@ -1,5 +1,7 @@
 package com.shahrabi.interview.service.main.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -14,9 +16,9 @@ public class LoanDto {
     @EqualsAndHashCode
     @ToString
     public static final class BorrowBookDto {
-        @NotBlank(message = "شناسه کتاب نمی‌تواند خالی باشد")
+        @NotBlank(message = "{error.loan.isbn.empty}")
         private String isbn;
-        @NotBlank(message = "اسم غرض گیرنده کتاب نمی‌تواند خالی باشد")
+        @NotBlank(message = "{error.loan.borrower_name.empty}")
         private String borrowerName;
     }
 
@@ -27,8 +29,9 @@ public class LoanDto {
     @ToString
     @Builder
     public static final class CommandLoanBookDto {
-        private UUID bookId;
         private String isbn;
+        private String title;
+        private UUID bookId;
         private String borrowerName;
         private LocalDateTime loanDate;
         private LocalDateTime returnDate;
@@ -40,7 +43,7 @@ public class LoanDto {
     @EqualsAndHashCode
     @ToString
     public static final class QueryLoanDto {
-        private String bookTitle;
+        private String title;
         private String isbn;
         private String borrowerName;
         private LocalDateTime loanDateStart;
@@ -49,9 +52,13 @@ public class LoanDto {
         private LocalDateTime returnDateEnd;
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @ToString
     public static final class ReportLoansDto {
-        private UUID id;
-        private UUID bookId;
+        private String title;
         private String isbn;
         private String borrowerName;
         private LocalDateTime loanDate;

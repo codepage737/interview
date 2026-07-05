@@ -1,22 +1,17 @@
 package com.shahrabi.interview.web.rest.controller.main;
 
 import com.shahrabi.interview.common.http.PagedResponseDto;
-import com.shahrabi.interview.model.BookSortField;
 import com.shahrabi.interview.model.LoanSortField;
 import com.shahrabi.interview.service.main.LoanService;
-import com.shahrabi.interview.service.main.dto.BookDto;
 import com.shahrabi.interview.service.main.dto.LoanDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/v1/loan")

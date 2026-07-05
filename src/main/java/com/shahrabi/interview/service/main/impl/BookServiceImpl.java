@@ -6,6 +6,7 @@ import com.shahrabi.interview.repository.main.BookRepository;
 import com.shahrabi.interview.service.main.BookService;
 import com.shahrabi.interview.service.main.dto.BookDto;
 import com.shahrabi.interview.service.main.exception.BookAlreadyBorrowedException;
+import com.shahrabi.interview.service.main.exception.BookNotBorrowedException;
 import com.shahrabi.interview.service.main.exception.DuplicateIsbnException;
 import com.shahrabi.interview.service.main.mapper.impl.BookMapper;
 import com.shahrabi.interview.service.main.specification.BookSpecification;
@@ -31,7 +32,7 @@ public class BookServiceImpl implements BookService {
         Specification<Book> allSpecifications = specification.getAllSpecifications(query);
         Page<Book> all = repository.findAll(allSpecifications, pageable);
         Page<BookDto.ReportingBookDto> map = all.map(mapper::toReportDto);
-        return new PagedResponseDto(map);
+        return new PagedResponseDto<>(map);
     }
 
     @Override
@@ -67,7 +68,28 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book findByIsbn(String isbn) {
-        return repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
+    public BookDto.CommandBookDto findByIsbn(String isbn) {
+        Book book = repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
+        return mapper.toDto(book);
+    }
+
+    @Override
+    public BookDto.CommandBookDto markBookAsUnAvailableAndReturn(String isbn) {
+        Book book = repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
+        if (!book.getIsAvailable()) {
+            throw new BookNotBorrowedException("error.book.operation.active_loan");
+        }
+        book.setIsAvailable(Boolean.FALSE);
+        return mapper.toDto(book);
+    }
+
+    @Override
+    public BookDto.CommandBookDto markBookAsAvailableAndReturn(String isbn) {
+        Book book = repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
+        if (book.getIsAvailable()) {
+            throw new BookNotBorrowedException("error.book.operation.inactive_loan");
+        }
+        book.setIsAvailable(Boolean.TRUE);
+        return mapper.toDto(book);
     }
 }

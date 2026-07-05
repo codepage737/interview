@@ -4,6 +4,7 @@ import com.shahrabi.interview.domain.main.Loan;
 import com.shahrabi.interview.service.main.dto.LoanDto;
 import com.shahrabi.interview.service.main.mapper.BaseMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
@@ -24,4 +25,8 @@ public interface LoanMapper extends BaseMapper<Loan, LoanDto.CommandLoanBookDto>
 
     @Override
     void update(@MappingTarget Loan loan, LoanDto.CommandLoanBookDto commandLoanBookDto);
+
+    @Mapping(target = "isbn", source = "book.isbn")
+    @Mapping(target = "title", source = "book.title")
+    LoanDto.ReportLoansDto toReportDto(Loan entity);
 }
