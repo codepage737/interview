@@ -77,7 +77,7 @@ public class BookServiceImpl implements BookService {
     public BookDto.CommandBookDto markBookAsUnAvailableAndReturn(String isbn) {
         Book book = repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
         if (!book.getIsAvailable()) {
-            throw new BookNotBorrowedException("error.book.operation.active_loan");
+            throw new BookAlreadyBorrowedException("error.book.operation.active_loan");
         }
         book.setIsAvailable(Boolean.FALSE);
         return mapper.toDto(book);

@@ -1,19 +1,15 @@
 package com.shahrabi.interview.service.main.impl;
 
 import com.shahrabi.interview.common.http.PagedResponseDto;
-import com.shahrabi.interview.domain.main.Book;
 import com.shahrabi.interview.domain.main.Loan;
 import com.shahrabi.interview.repository.main.LoanRepository;
 import com.shahrabi.interview.service.main.BookService;
 import com.shahrabi.interview.service.main.LoanService;
 import com.shahrabi.interview.service.main.dto.BookDto;
 import com.shahrabi.interview.service.main.dto.LoanDto;
-import com.shahrabi.interview.service.main.exception.BookAlreadyBorrowedException;
-import com.shahrabi.interview.service.main.exception.BookNotBorrowedException;
 import com.shahrabi.interview.service.main.mapper.impl.LoanMapper;
 import com.shahrabi.interview.service.main.specification.LoanSpecification;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -58,13 +54,14 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
-    public void returnBook(String isbn) {
+    public Boolean returnBook(String isbn) {
         BookDto.CommandBookDto bookDto = bookService.markBookAsAvailableAndReturn(isbn);
         Optional<Loan> loanOptional = repository.findFirstByBookIdAndReturnDateIsNullOrderByLoanDateDesc(bookDto.getId());
         if (loanOptional.isPresent()) {
             Loan loan = loanOptional.get();
             loan.setReturnDate(LocalDateTime.now());
             bookDto.setIsAvailable(Boolean.TRUE);
+            return Boolean.TRUE;
         } else {
             throw new RuntimeException();
         }

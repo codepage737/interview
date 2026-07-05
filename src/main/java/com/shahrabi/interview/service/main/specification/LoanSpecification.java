@@ -1,10 +1,7 @@
 package com.shahrabi.interview.service.main.specification;
 
-import com.shahrabi.interview.domain.main.Book;
 import com.shahrabi.interview.domain.main.Loan;
 import com.shahrabi.interview.service.main.dto.LoanDto;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 

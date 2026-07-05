@@ -42,8 +42,8 @@ public class LoanController {
     }
 
     @PostMapping(value = "/return/{isbn}")
-    public ResponseEntity<Void> returnBook(@PathVariable String isbn) {
-        service.returnBook(isbn);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Boolean> returnBook(@PathVariable String isbn) {
+        Boolean b = service.returnBook(isbn);
+        return ResponseEntity.ok().body(b);
     }
 }

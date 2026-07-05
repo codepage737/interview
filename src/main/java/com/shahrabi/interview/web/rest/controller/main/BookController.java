@@ -4,7 +4,6 @@ import com.shahrabi.interview.common.http.PagedResponseDto;
 import com.shahrabi.interview.model.BookSortField;
 import com.shahrabi.interview.service.main.BookService;
 import com.shahrabi.interview.service.main.dto.BookDto;
-import com.shahrabi.interview.service.main.dto.LoanDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;

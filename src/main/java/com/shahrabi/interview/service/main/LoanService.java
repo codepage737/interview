@@ -9,5 +9,5 @@ public interface LoanService {
 
     LoanDto.CommandLoanBookDto borrowBook(LoanDto.BorrowBookDto dto);
 
-    void returnBook(String isbn);
+    Boolean returnBook(String isbn);
 }

@@ -1,7 +1,5 @@
 package com.shahrabi.interview.service.main.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -15,6 +13,7 @@ public class LoanDto {
     @AllArgsConstructor
     @EqualsAndHashCode
     @ToString
+    @Builder
     public static final class BorrowBookDto {
         @NotBlank(message = "{error.loan.isbn.empty}")
         private String isbn;
