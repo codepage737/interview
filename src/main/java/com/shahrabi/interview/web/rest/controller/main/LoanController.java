@@ -15,9 +15,9 @@ public class LoanController {
 
     @GetMapping
     public ResponseEntity<Page<LoanDto.BorrowBookDto>> findAll(
-            @Min(value = 1) @RequestParam(defaultValue = "0") int currentPage,
+            @Min(value = 0) @RequestParam(defaultValue = "0") int currentPage,
             @Min(value = 10) @RequestParam(defaultValue = "10") int pageSize,
-            @Valid @ModelAttribute LoanDto.QueryLoanDto query
+            @ModelAttribute LoanDto.QueryLoanDto query
     ) {
         return null;
     }

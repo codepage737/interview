@@ -1,0 +1,9 @@
+package com.shahrabi.interview.model;
+
+public enum LoanSortField {
+    loanDate,
+    createdAt;
+
+    public static final String DEFAULT_SORT = "createdAt";
+
+}
