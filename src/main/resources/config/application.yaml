@@ -11,7 +11,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -23,7 +23,7 @@ spring:
 
   sql:
     init:
-      mode: never
+      mode: always
       data-locations: classpath:data.sql
 
   datasource:
@@ -44,9 +44,4 @@ logging:
 springdoc:
   packages-to-scan: com.shahrabi.interview.web.rest.controller
   api-docs:
-    enabled: true
-  swagger-ui:
-    oauth:
-      client-id: interview-service
-      client-secret: qI8FdIkBzyq8xUsInDhVmUUgdeYVQjJ6
     enabled: true

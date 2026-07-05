@@ -15,7 +15,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @Entity
-@Table(name = "book", schema = "core")
+@Table(name = "loan", schema = "core")
 @EntityListeners(AuditingEntityListener.class)
 public class Loan extends AbstractAuditingEntity<UUID> {
 
@@ -26,12 +26,12 @@ public class Loan extends AbstractAuditingEntity<UUID> {
     @Column(name = "book_id", nullable = false)
     private UUID bookId;
 
-    @Column(name="borrower_name", nullable = false)
+    @Column(name="borrower_name", nullable = false, length = 32)
     private String borrowerName;
 
-    @Column(name = "loan_date", nullable = false)
+    @Column(name = "loan_date", nullable = false, columnDefinition = "TIMESTAMP(3) WITH TIME ZONE")
     private LocalDateTime loanDate;
 
-    @Column(name = "return_date")
+    @Column(name = "return_date", columnDefinition = "TIMESTAMP(3) WITH TIME ZONE")
     private LocalDateTime returnDate;
 }

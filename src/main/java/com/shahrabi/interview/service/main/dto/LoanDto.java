@@ -1,6 +1,6 @@
 package com.shahrabi.interview.service.main.dto;
 
-import com.shahrabi.interview.domain.main.Book;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,13 +13,11 @@ public class LoanDto {
     @AllArgsConstructor
     @EqualsAndHashCode
     @ToString
-    public static final class CommandLoanDto {
-        private UUID id;
-        private Book book;
-        private UUID bookId;
+    public static final class BorrowBookDto {
+        @NotBlank(message = "شناسه کتاب نمی‌تواند خالی باشد")
+        private String isbn;
+        @NotBlank(message = "اسم غرض گیرنده کتاب نمی‌تواند خالی باشد")
         private String borrowerName;
-        private LocalDateTime loanDate;
-        private LocalDateTime returnDate;
     }
 
     @Data
@@ -28,9 +26,19 @@ public class LoanDto {
     @EqualsAndHashCode
     @ToString
     public static final class QueryLoanDto {
+        private String bookTitle;
+        private String isbn;
+        private String borrowerName;
+        private LocalDateTime loanDateStart;
+        private LocalDateTime loanDateEnd;
+        private LocalDateTime returnDateStart;
+        private LocalDateTime returnDateEnd;
+    }
+
+    public static final class ReportLoansDto {
         private UUID id;
-        private Book book;
         private UUID bookId;
+        private String isbn;
         private String borrowerName;
         private LocalDateTime loanDate;
         private LocalDateTime returnDate;

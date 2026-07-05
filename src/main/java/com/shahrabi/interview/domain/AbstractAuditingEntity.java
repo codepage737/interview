@@ -11,7 +11,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.UUID;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -28,12 +27,12 @@ public class AbstractAuditingEntity<T extends Serializable> implements Serializa
     @CreatedBy
     @Column(name="created_by", nullable = false, updatable = false)
     @JsonIgnore
-    private UUID createdBy;
+    private String createdBy;
 
     @LastModifiedBy
     @Column(name="modified_by")
     @JsonIgnore
-    private UUID modifiedBy;
+    private String modifiedBy;
 
     @CreatedDate
     @Column(name="created_at", updatable = false)
