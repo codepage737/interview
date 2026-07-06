@@ -64,6 +64,7 @@ class BookServiceImplUnitTest {
         borrowedBook.setId(UUID.randomUUID());
         borrowedBook.setIsbn(DELETED_ISBN);
         borrowedBook.setIsAvailable(false);
+        borrowedBook.setIsDeleted(false);
     }
 
     @Nested

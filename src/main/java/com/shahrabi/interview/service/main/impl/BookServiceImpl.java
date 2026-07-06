@@ -30,10 +30,16 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public PagedResponseDto<BookDto.ReportingBookDto> findAll(BookDto.QueryBookDto query, Pageable pageable) {
-        Specification<Book> allSpecifications = specification.getAllSpecifications(query);
+        Specification<Book> allSpecifications = findAllAvailableBooks(query);
         Page<Book> all = repository.findAll(allSpecifications, pageable);
         Page<BookDto.ReportingBookDto> map = all.map(mapper::toReportDto);
         return new PagedResponseDto<>(map);
+    }
+
+    private Specification<Book> findAllAvailableBooks(BookDto.QueryBookDto query) {
+        Specification<Book> allSpecifications = specification.getAllSpecifications(query);
+        Specification<Book> notDeletedLogic = specification.isDeleted(false);
+        return allSpecifications.and(notDeletedLogic);
     }
 
     @Override
@@ -64,16 +70,23 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public void deleteByIsbn(String isbn) {
         Book book = repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
-        if (book.getIsAvailable()) {
+        if (book.getIsDeleted()) {
+            throw new BookAlreadyDeletedException("error.book.operation.already_deleted");
+        } else if (book.getIsAvailable()) {
             book.setIsDeleted(Boolean.TRUE);
+
         } else {
             throw new BookAlreadyBorrowedException("error.book.operation.active_borrow");
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookDto.CommandBookDto findByIsbn(String isbn) {
         Book book = repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
+        if (book.getIsDeleted()) {
+            throw new BookAlreadyDeletedException("error.book.operation.already_deleted");
+        }
         return mapper.toDto(book);
     }
 

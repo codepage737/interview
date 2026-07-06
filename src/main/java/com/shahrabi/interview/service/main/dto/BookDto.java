@@ -30,12 +30,6 @@ public class BookDto {
         @Schema(accessMode = Schema.AccessMode.READ_ONLY)
         @Builder.Default
         private Boolean isAvailable = true;
-
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-        @Builder.Default
-        private Boolean isDeleted = false;
-
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @Schema(accessMode = Schema.AccessMode.READ_ONLY)
         private UUID id;
@@ -55,7 +49,6 @@ public class BookDto {
         private Integer publishYearStart;
         private Integer publishYearEnd;
         private Boolean isAvailable;
-        private Boolean isDeleted;
     }
 
     @Data
@@ -70,6 +63,5 @@ public class BookDto {
         private String isbn;
         private Integer publishYear;
         private Boolean isAvailable;
-        private Boolean isDeleted;
     }
 }

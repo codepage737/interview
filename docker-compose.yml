@@ -60,13 +60,6 @@ services:
       - DB_NAME=${POSTGRES_DB:-interview_db}
       - DB_USER=${POSTGRES_USER:-admin}
       - DB_PASS=${POSTGRES_PASSWORD:-admin}
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/api/v1/ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 15s
-#    restart: always
 
 configs:
   project_env:

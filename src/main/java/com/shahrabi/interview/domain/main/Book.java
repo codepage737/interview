@@ -35,11 +35,11 @@ public class Book extends AbstractAuditingEntity<UUID> {
 
     @Column(name = "is_available", nullable = false)
     @ColumnDefault("true")
-    private Boolean isAvailable;
+    private Boolean isAvailable = true;
 
     @Column(name = "is_deleted", nullable = false)
     @ColumnDefault("false")
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<Borrow> borrows;

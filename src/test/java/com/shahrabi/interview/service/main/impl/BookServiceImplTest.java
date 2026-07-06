@@ -66,7 +66,6 @@ class BookServiceImplTest {
             assertEquals(test.getIsbn(), commandBookDto.getIsbn());
             assertEquals(test.getPublishYear(), commandBookDto.getPublishYear());
             assertTrue(commandBookDto.getIsAvailable());
-            assertFalse(commandBookDto.getIsDeleted());
         }
 
         @Test
@@ -86,7 +85,6 @@ class BookServiceImplTest {
             assertEquals("error.book.isbn.duplicate", exception.getMessage());
         }
     }
-
 
     @Nested
     @DisplayName(value = "Update Book")
@@ -111,8 +109,12 @@ class BookServiceImplTest {
         @Test
         @DisplayName(value = "update book should throw exception if ISBN was already deleted")
         void updateBookShouldReturnExceptionIfBookWasAlreadyDeleted() {
-            BookDto.CommandBookDto bookDto = bookService.findByIsbn(DELETED_ISBN);
-            bookDto.setTitle("");
+            BookDto.CommandBookDto bookDto = BookDto.CommandBookDto.builder()
+                    .title("Existing Book")
+                    .authorName("Some Author")
+                    .publishYear(2000)
+                    .isbn(DELETED_ISBN).build();
+
             Exception exception = assertThrows(BookAlreadyDeletedException.class, () -> {
                 bookService.update(bookDto);
             });
@@ -166,8 +168,10 @@ class BookServiceImplTest {
         @DisplayName(value = "delete book should works if ISBN was exist and not borrowed")
         void deleteBookShouldWorksIfISBNWasExistAndNotBorrowed() {
             bookService.deleteByIsbn(VALID_ISBN);
-            BookDto.CommandBookDto bookDto = bookService.findByIsbn(VALID_ISBN);
-            assertTrue(bookDto.getIsDeleted());
+            Exception exception = assertThrows(BookAlreadyDeletedException.class, () -> {
+                bookService.findByIsbn(VALID_ISBN);
+            });
+            assertEquals("error.book.operation.already_deleted", exception.getMessage());
         }
     }
 }

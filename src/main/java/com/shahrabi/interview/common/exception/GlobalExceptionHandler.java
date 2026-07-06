@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBookAlreadyDeletedException(BookAlreadyDeletedException ex, Locale locale) {
         String message = messageSource.getMessage(ex.getMessage(), null, locale);
         ErrorResponse error = new ErrorResponse(false, message, System.currentTimeMillis());
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BookAlreadyBorrowedException.class)

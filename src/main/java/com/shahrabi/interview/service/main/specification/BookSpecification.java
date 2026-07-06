@@ -18,8 +18,8 @@ public class BookSpecification {
                 .and(hasAuthorName(dto.getAuthorName()))
                 .and(hasPublishYear(dto.getPublishYear()))
                 .and(hasPublishYearBetween(dto.getPublishYearStart(), dto.getPublishYearEnd()))
-                .and(isAvailable(dto.getIsAvailable()))
-                .and(isDeleted(dto.getIsDeleted()));
+                .and(isAvailable(dto.getIsAvailable()));
+//                .and(isDeleted(dto.getIsDeleted()));
     }
 
     public Specification<Book> hasId(UUID id) {
