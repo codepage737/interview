@@ -3,6 +3,7 @@ package com.shahrabi.interview.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
@@ -19,17 +20,24 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         UserDetails user1 = User.withUsername("admin")
-                .password(passwordEncoder.encode("admin"))
+                .password(passwordEncoder.encode("123"))
+                .roles("ADMIN")
                 .build();
-        UserDetails user2 = User.withUsername("soheil")
-                .password(passwordEncoder.encode("firefox"))
+        UserDetails user2 = User.withUsername("admin2")
+                .roles("ADMIN")
+                .password(passwordEncoder.encode("123"))
                 .build();
-        return new InMemoryUserDetailsManager(user1, user2);
+        UserDetails user3 = User.withUsername("user")
+                .roles("USER")
+                .password(passwordEncoder.encode("123"))
+                .build();
+        return new InMemoryUserDetailsManager(user1, user2, user3);
     }
 
     @Bean

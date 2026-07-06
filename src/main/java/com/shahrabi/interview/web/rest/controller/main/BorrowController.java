@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,6 +29,7 @@ import java.util.UUID;
 @RequestMapping(value = "/api/v1/borrow")
 @Tag(name = "Borrow Management", description = "APIs for borrowing/returning books, and tracking history")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class BorrowController {
 
     private final BorrowService service;

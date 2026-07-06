@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -37,7 +38,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex, Locale locale) {
-        String message = messageSource.getMessage("error.server_error", null, locale);
+        String message;
+        if (ex instanceof AuthorizationDeniedException) {
+            message = messageSource.getMessage("error.access.denied", null, locale);
+        } else {
+            message = messageSource.getMessage("error.server_error", null, locale);
+        }
         ErrorResponse error = new ErrorResponse(false, message, System.currentTimeMillis());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }

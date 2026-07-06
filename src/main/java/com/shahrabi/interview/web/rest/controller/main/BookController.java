@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -29,6 +30,7 @@ import java.net.URI;
 @RequestMapping(value = "/api/v1/book")
 @Tag(name = "Book Management", description = "CRUD operations on Book entity")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class BookController {
 
     private final BookService service;
@@ -36,6 +38,7 @@ public class BookController {
     @GetMapping(value = "/search")
     @Operation(summary = "Search books with pagination and sorting", description = "Retrieve a filtered, paginated and sorted list of books based on criteria.")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved the paginated list")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<PagedResponseDto<BookDto.ReportingBookDto>> findAll(
             @Min(value = 0) @RequestParam(defaultValue = "0") int currentPage,
             @Min(value = 10) @RequestParam(defaultValue = "10") int pageSize,
@@ -57,6 +60,7 @@ public class BookController {
             @ApiResponse(responseCode = "404", description = "Book not found with the provided ISBN",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<BookDto.CommandBookDto> findByIsbn(@PathVariable String isbn) {
         BookDto.CommandBookDto bookDto = service.findByIsbn(isbn);
         return ResponseEntity.ok().body(bookDto);
@@ -69,6 +73,7 @@ public class BookController {
             @ApiResponse(responseCode = "409", description = "Book with this ISBN already exists",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookDto.CommandBookDto> saveBook(@Valid @RequestBody BookDto.CommandBookDto bookDto) {
         BookDto.CommandBookDto savedDto = service.saveBook(bookDto);
         URI location = ServletUriComponentsBuilder

@@ -35,6 +35,33 @@ postgres username and postgres password in src/main/resources/config/application
 ```
 ---
 
+## Authentication
+
+This app uses **HTTP Basic Authentication**
+
+All users are stored **in memory** using `InMemoryUserDetailsManager`.
+
+| Username | Password | Role  |
+|----------|----------|-------|
+| admin    | 123      | ADMIN |
+| admin2   | 123      | ADMIN |
+| user     | 123      | USER  |
+
+## Authorization
+
+The application is configured with role-based access control:
+* **USER**
+  -  view list of books
+* **ADMIN**
+  - view list of books.
+  - create new books.
+  - update existing books.
+  - delete books.
+  - full access to manage book borrowing.
+  - list all borrowing.
+
+---
+
 ## Requirements
 
 * JDK 17
