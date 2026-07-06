@@ -1,25 +1,25 @@
 package com.shahrabi.interview.service.main.specification;
 
-import com.shahrabi.interview.domain.main.Loan;
-import com.shahrabi.interview.service.main.dto.LoanDto;
+import com.shahrabi.interview.domain.main.Borrow;
+import com.shahrabi.interview.service.main.dto.BorrowDto;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
-public class LoanSpecification {
+public class BorrowSpecification {
 
-    public Specification<Loan> getAllSpecifications(LoanDto.QueryLoanDto dto) {
+    public Specification<Borrow> getAllSpecifications(BorrowDto.QueryBorrowDto dto) {
         return Specification
                 .where(hasBorrowerName(dto.getBorrowerName()))
                 .and(hasIsbn(dto.getIsbn()))
                 .and(hasTitle(dto.getTitle()))
-                .and(borrowedDateBetween(dto.getLoanDateStart(), dto.getLoanDateEnd()))
+                .and(borrowedDateBetween(dto.getBorrowDateStart(), dto.getBorrowDateEnd()))
                 .and(returnDateBetween(dto.getReturnDateStart(), dto.getReturnDateEnd()));
     }
 
-    public Specification<Loan> hasBorrowerName(String borrowerName) {
+    public Specification<Borrow> hasBorrowerName(String borrowerName) {
         return (root, query, cb) -> {
             if (borrowerName != null) {
                 return cb.equal(root.get("borrowerName"), borrowerName);
@@ -28,7 +28,7 @@ public class LoanSpecification {
         };
     }
 
-    public Specification<Loan> hasIsbn(String isbn) {
+    public Specification<Borrow> hasIsbn(String isbn) {
         return (root, query, cb) -> {
             if (isbn == null) return cb.conjunction();
 
@@ -37,7 +37,7 @@ public class LoanSpecification {
         };
     }
 
-    public Specification<Loan> hasTitle(String title) {
+    public Specification<Borrow> hasTitle(String title) {
         return (root, query, cb) -> {
             if (title == null) return cb.conjunction();
 
@@ -46,20 +46,20 @@ public class LoanSpecification {
         };
     }
 
-    public Specification<Loan> borrowedDateBetween(LocalDateTime loanDateStart, LocalDateTime loanDateEnd) {
+    public Specification<Borrow> borrowedDateBetween(LocalDateTime borrowDateStart, LocalDateTime borrowDateEnd) {
         return (root, query, cb) -> {
-            if (loanDateStart != null && loanDateEnd != null) {
-                return cb.between(root.get("loanDate"), loanDateStart, loanDateEnd);
-            } else if (loanDateStart != null) {
-                return cb.greaterThanOrEqualTo(root.get("loanDate"), loanDateStart);
-            } else if (loanDateEnd != null) {
-                return cb.lessThanOrEqualTo(root.get("loanDate"), loanDateEnd);
+            if (borrowDateStart != null && borrowDateEnd != null) {
+                return cb.between(root.get("borrowDate"), borrowDateStart, borrowDateEnd);
+            } else if (borrowDateStart != null) {
+                return cb.greaterThanOrEqualTo(root.get("borrowDate"), borrowDateStart);
+            } else if (borrowDateEnd != null) {
+                return cb.lessThanOrEqualTo(root.get("borrowDate"), borrowDateEnd);
             }
             return cb.conjunction();
         };
     }
 
-    public Specification<Loan> returnDateBetween(LocalDateTime returnDateStart, LocalDateTime returnDateEnd) {
+    public Specification<Borrow> returnDateBetween(LocalDateTime returnDateStart, LocalDateTime returnDateEnd) {
         return (root, query, cb) -> {
             if (returnDateStart != null && returnDateEnd != null) {
                 return cb.between(root.get("returnDate"), returnDateStart, returnDateEnd);

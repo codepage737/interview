@@ -2,9 +2,9 @@ package com.shahrabi.interview.service.main.impl;
 
 import com.shahrabi.interview.TestcontainersConfiguration;
 import com.shahrabi.interview.service.main.BookService;
-import com.shahrabi.interview.service.main.LoanService;
+import com.shahrabi.interview.service.main.BorrowService;
 import com.shahrabi.interview.service.main.dto.BookDto;
-import com.shahrabi.interview.service.main.dto.LoanDto;
+import com.shahrabi.interview.service.main.dto.BorrowDto;
 import com.shahrabi.interview.service.main.exception.BookAlreadyBorrowedException;
 import com.shahrabi.interview.service.main.exception.BookAlreadyDeletedException;
 import com.shahrabi.interview.service.main.exception.DuplicateIsbnException;
@@ -34,14 +34,14 @@ class BookServiceImplTest {
     @Autowired
     private BookService bookService;
     @Autowired
-    private LoanService loanService;
+    private BorrowService borrowService;
 
     @Autowired
     PostgreSQLContainer<?> postgresql;
 
     @Nested
-    @DisplayName(value = "Loan Specification Test")
-    class LoanSpecificationTest {
+    @DisplayName(value = "Book Specification Test")
+    class BorrowSpecificationTest {
 
     }
 
@@ -151,15 +151,15 @@ class BookServiceImplTest {
         @Test
         @DisplayName(value = "delete book should throw exception if book was already borrowed")
         void deleteBookShouldReturnExceptionIfBookWasAlreadyBorrowed() {
-            LoanDto.BorrowBookDto test = LoanDto.BorrowBookDto.builder()
+            BorrowDto.BorrowBookDto test = BorrowDto.BorrowBookDto.builder()
                     .isbn(VALID_ISBN)
                     .borrowerName(BORROWER_NAME).build();
-            loanService.borrowBook(test);
+            borrowService.borrowBook(test);
 
             Exception exception = assertThrows(BookAlreadyBorrowedException.class, () -> {
                 bookService.deleteByIsbn(VALID_ISBN);
             });
-            assertEquals("error.book.operation.active_loan", exception.getMessage());
+            assertEquals("error.book.operation.active_borrow", exception.getMessage());
         }
 
         @Test

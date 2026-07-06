@@ -67,14 +67,14 @@ postgres username and postgres password in src/main/resources/config/application
 * **service**: Contains contract of application services, their implementation, DTOs, mappers, specifications of services and business exceptions
 * **web.rest**: Contains controllers
 * **resources**: Contains project config, resource bundle and data.sql, schema.sql to initialize database if data cleared
-* **test**: unit test on book service and integration test on book and loan service
+* **test**: unit test on book service and integration test on book and borrow service
 ---
 
 ## Some Important Design Decisions
 
 1. **Implementing an Automated Auditing System**: Since multiple operators can work with the software at the same time in a library, 
    I implemented an auditing mechanism using a mapped superclass AbstractAuditingEntity with Spring Security's AuditorAware,
-   so we can always track exactly which operator deleted a book or created a loan record, 
+   so we can always track exactly which operator deleted a book or created a borrow record, 
    along with the exact timestamp, without writing manual logic in the services.
 
 2. **Using Testcontainers for integration test**: Because integration tests need a database to run and using in memory database can cause issue while production

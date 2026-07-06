@@ -15,9 +15,9 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @Entity
-@Table(name = "loan", schema = "core")
+@Table(name = "borrow_book", schema = "core")
 @EntityListeners(AuditingEntityListener.class)
-public class Loan extends AbstractAuditingEntity<UUID> {
+public class Borrow extends AbstractAuditingEntity<UUID> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id", insertable = false, updatable = false)
@@ -29,8 +29,8 @@ public class Loan extends AbstractAuditingEntity<UUID> {
     @Column(name="borrower_name", nullable = false, length = 32)
     private String borrowerName;
 
-    @Column(name = "loan_date", nullable = false, columnDefinition = "TIMESTAMP(3) WITH TIME ZONE")
-    private LocalDateTime loanDate;
+    @Column(name = "borrow_date", nullable = false, columnDefinition = "TIMESTAMP(3) WITH TIME ZONE")
+    private LocalDateTime borrowDate;
 
     @Column(name = "return_date", columnDefinition = "TIMESTAMP(3) WITH TIME ZONE")
     private LocalDateTime returnDate;

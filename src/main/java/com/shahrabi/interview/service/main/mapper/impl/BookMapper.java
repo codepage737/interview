@@ -26,6 +26,8 @@ public interface BookMapper extends BaseMapper<Book, BookDto.CommandBookDto> {
 
     @Override
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "isAvailable", ignore = true)
+    @Mapping(target = "isDeleted", ignore = true)
     void update(@MappingTarget Book book, BookDto.CommandBookDto commandBookDto);
 
     BookDto.ReportingBookDto toReportDto(Book entity);

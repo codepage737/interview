@@ -8,13 +8,13 @@ public interface BookService {
 
     PagedResponseDto<BookDto.ReportingBookDto> findAll(BookDto.QueryBookDto query, Pageable pageable);
 
+    BookDto.CommandBookDto findByIsbn(String isbn);
+
     BookDto.CommandBookDto saveBook(BookDto.CommandBookDto dto);
 
     BookDto.CommandBookDto update(BookDto.CommandBookDto dto);
 
-    void deleteByIsbn(String bookId);
-
-    BookDto.CommandBookDto findByIsbn(String isbn);
+    void deleteByIsbn(String isbn);
 
     BookDto.CommandBookDto markBookAsUnAvailableAndReturn(String isbn);
 

@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS public.base_table
     id uuid NOT NULL,
     created_at timestamp(3) with time zone,
     updated_at timestamp(3) with time zone,
-    created_by character varying(32) COLLATE pg_catalog."default" NOT NULL,
+    created_by character varying(32) COLLATE pg_catalog."default",
     modified_by character varying(32) COLLATE pg_catalog."default"
 )
 
@@ -50,11 +50,11 @@ ALTER TABLE IF EXISTS core.book
     OWNER to admin;
 
 
--- Table: core.loan
+-- Table: core.borrow_book
 
--- DROP TABLE IF EXISTS core.loan;
+-- DROP TABLE IF EXISTS core.borrow_book;
 
-CREATE TABLE IF NOT EXISTS core.loan
+CREATE TABLE IF NOT EXISTS core.borrow_book
 (
     -- Inherited from table public.base_table: id uuid NOT NULL,
     -- Inherited from table public.base_table: created_at timestamp(3) with time zone,
@@ -63,10 +63,10 @@ CREATE TABLE IF NOT EXISTS core.loan
     -- Inherited from table public.base_table: modified_by character varying(32) COLLATE pg_catalog."default",
     book_id uuid NOT NULL,
     borrower_name character varying(32) COLLATE pg_catalog."default" NOT NULL,
-    loan_date timestamp(3) without time zone NOT NULL,
+    borrow_date timestamp(3) without time zone NOT NULL,
     return_date timestamp(3) without time zone,
-    CONSTRAINT loan_pkey PRIMARY KEY (id),
-    CONSTRAINT loan_book_id_fkey FOREIGN KEY (book_id)
+    CONSTRAINT borrow_book_pkey PRIMARY KEY (id),
+    CONSTRAINT borrow_book_book_id_fkey FOREIGN KEY (book_id)
     REFERENCES core.book (id) MATCH SIMPLE
                            ON UPDATE NO ACTION
                            ON DELETE NO ACTION
@@ -75,5 +75,5 @@ CREATE TABLE IF NOT EXISTS core.loan
 
     TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS core.loan
+ALTER TABLE IF EXISTS core.borrow_book
     OWNER to admin;

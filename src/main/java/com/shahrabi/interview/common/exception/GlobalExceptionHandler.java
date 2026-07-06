@@ -1,6 +1,7 @@
 package com.shahrabi.interview.common.exception;
 
 import com.shahrabi.interview.service.main.exception.BookAlreadyBorrowedException;
+import com.shahrabi.interview.service.main.exception.BookAlreadyDeletedException;
 import com.shahrabi.interview.service.main.exception.BookNotBorrowedException;
 import com.shahrabi.interview.service.main.exception.DuplicateIsbnException;
 import jakarta.persistence.EntityNotFoundException;
@@ -57,6 +58,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
     public ResponseEntity<ErrorResponse> handleOptimisticLockingFailureException(ObjectOptimisticLockingFailureException ex, Locale locale) {
         String message = messageSource.getMessage("error.concurrency.conflict", null, locale);
+        ErrorResponse error = new ErrorResponse(false, message, System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BookAlreadyDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleBookAlreadyDeletedException(BookAlreadyDeletedException ex, Locale locale) {
+        String message = messageSource.getMessage(ex.getMessage(), null, locale);
         ErrorResponse error = new ErrorResponse(false, message, System.currentTimeMillis());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }

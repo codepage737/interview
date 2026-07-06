@@ -1,8 +1,8 @@
 package com.shahrabi.interview.service.main.impl;
 
 import com.shahrabi.interview.TestcontainersConfiguration;
-import com.shahrabi.interview.service.main.LoanService;
-import com.shahrabi.interview.service.main.dto.LoanDto;
+import com.shahrabi.interview.service.main.BorrowService;
+import com.shahrabi.interview.service.main.dto.BorrowDto;
 import com.shahrabi.interview.service.main.exception.BookAlreadyBorrowedException;
 import com.shahrabi.interview.service.main.exception.BookAlreadyDeletedException;
 import com.shahrabi.interview.service.main.exception.BookNotBorrowedException;
@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Import(TestcontainersConfiguration.class)
-@DisplayName(value = "Loan Service Test")
-class LoanServiceImplTest {
+@DisplayName(value = "Borrow Service Test")
+class BorrowServiceImplTest {
 
     private final String VALID_ISBN = "978-964-000-005-5";
     private final String DELETED_ISBN = "978-964-000-030-0";
@@ -31,14 +31,14 @@ class LoanServiceImplTest {
     private final String BORROWER_NAME = "soheil";
 
     @Autowired
-    private LoanService loanService;
+    private BorrowService borrowService;
 
     @Autowired
     PostgreSQLContainer<?> postgresql;
     
     @Nested
-    @DisplayName(value = "Loan Specification Test")
-    class LoanSpecificationTest {
+    @DisplayName(value = "Borrow Specification Test")
+    class BorrowSpecificationTest {
 
     }
 
@@ -50,11 +50,11 @@ class LoanServiceImplTest {
         @Test
         @DisplayName(value = "borrow a book should return exception if book was not exist")
         void borrowBookShouldReturnExceptionIfBookWasNotExist() {
-            LoanDto.BorrowBookDto test = LoanDto.BorrowBookDto.builder()
+            BorrowDto.BorrowBookDto test = BorrowDto.BorrowBookDto.builder()
                     .isbn(INVALID_ISBN)
                     .borrowerName(BORROWER_NAME).build();
             Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-                loanService.borrowBook(test);
+                borrowService.borrowBook(test);
             });
             assertEquals("error.book.isbn.not_found", exception.getMessage());
         }
@@ -62,11 +62,11 @@ class LoanServiceImplTest {
         @Test
         @DisplayName(value = "borrow a book should works if book was already deleted")
         void borrowBookShouldReturnExceptionIfBookWasAlreadyDeleted() {
-            LoanDto.BorrowBookDto test = LoanDto.BorrowBookDto.builder()
+            BorrowDto.BorrowBookDto test = BorrowDto.BorrowBookDto.builder()
                     .isbn(DELETED_ISBN)
                     .borrowerName(BORROWER_NAME).build();
             Exception exception = assertThrows(BookAlreadyDeletedException.class, () -> {
-                loanService.borrowBook(test);
+                borrowService.borrowBook(test);
             });
             assertEquals("error.book.operation.already_deleted", exception.getMessage());
         }
@@ -74,30 +74,30 @@ class LoanServiceImplTest {
         @Test
         @DisplayName(value = "borrow a book should works if book exist and borrowable")
         void borrowBookShouldWorksIfBookExistAndBorrowable() {
-            LoanDto.BorrowBookDto test = LoanDto.BorrowBookDto.builder()
+            BorrowDto.BorrowBookDto test = BorrowDto.BorrowBookDto.builder()
                     .isbn(VALID_ISBN)
                     .borrowerName(BORROWER_NAME).build();
-            LoanDto.CommandLoanBookDto loanBookDto = loanService.borrowBook(test);
+            BorrowDto.CommandBorrowBookDto borrowedBookDto = borrowService.borrowBook(test);
 
-            assertEquals(BORROWER_NAME, loanBookDto.getBorrowerName());
-            assertNull(loanBookDto.getReturnDate());
+            assertEquals(BORROWER_NAME, borrowedBookDto.getBorrowerName());
+            assertNull(borrowedBookDto.getReturnDate());
 
-            assertTrue(loanBookDto.getLoanDate().isBefore(LocalDateTime.now()));
-            assertTrue(loanBookDto.getLoanDate().isAfter(LocalDateTime.now().minusSeconds(2)));
+            assertTrue(borrowedBookDto.getBorrowDate().isBefore(LocalDateTime.now()));
+            assertTrue(borrowedBookDto.getBorrowDate().isAfter(LocalDateTime.now().minusSeconds(2)));
         }
 
         @Test
         @DisplayName(value = "borrow a book should return exception if book was already borrowed to some one else")
         void borrowBookShouldReturnExceptionIfBookWasAlreadyBorrowedToSomeOneElse() {
-            LoanDto.BorrowBookDto test = LoanDto.BorrowBookDto.builder()
+            BorrowDto.BorrowBookDto test = BorrowDto.BorrowBookDto.builder()
                     .isbn(VALID_ISBN)
                     .borrowerName(BORROWER_NAME).build();
-            loanService.borrowBook(test);
+            borrowService.borrowBook(test);
 
             Exception exception = assertThrows(BookAlreadyBorrowedException.class, () -> {
-                loanService.borrowBook(test);
+                borrowService.borrowBook(test);
             });
-            assertEquals("error.book.operation.active_loan", exception.getMessage());
+            assertEquals("error.book.operation.active_borrow", exception.getMessage());
         }
     }
 
@@ -110,7 +110,7 @@ class LoanServiceImplTest {
         @DisplayName(value = "return book should return exception if book was not exist")
         void returnBookRhouldReturnExceptionIfBookWsNotExist() {
             Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-                loanService.returnBook(INVALID_ISBN);
+                borrowService.returnBook(INVALID_ISBN);
             });
             assertEquals("error.book.isbn.not_found", exception.getMessage());
         }
@@ -118,21 +118,21 @@ class LoanServiceImplTest {
         @Test
         @DisplayName(value = "return book should works if already borrowed")
         void returnBookShouldWorksIfAlreadyBorrowed() {
-            LoanDto.BorrowBookDto test = LoanDto.BorrowBookDto.builder()
+            BorrowDto.BorrowBookDto test = BorrowDto.BorrowBookDto.builder()
                     .isbn(VALID_ISBN)
                     .borrowerName(BORROWER_NAME).build();
-            LoanDto.CommandLoanBookDto loanBookDto = loanService.borrowBook(test);
+            borrowService.borrowBook(test);
 
-            loanService.returnBook(VALID_ISBN);
+            borrowService.returnBook(VALID_ISBN);
         }
 
         @Test
         @DisplayName(value = "return book should return exception if book was not borrowed to anyone")
         void returnBookShouldReturnExceptionIfBookWasNotBorrowedToAnyone() {
             Exception exception = assertThrows(BookNotBorrowedException.class, () -> {
-                loanService.returnBook(VALID_ISBN);
+                borrowService.returnBook(VALID_ISBN);
             });
-            assertEquals("error.book.operation.inactive_loan", exception.getMessage());
+            assertEquals("error.book.operation.inactive_borrow", exception.getMessage());
         }
     }
 }

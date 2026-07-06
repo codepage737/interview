@@ -42,7 +42,7 @@ public class Book extends AbstractAuditingEntity<UUID> {
     private Boolean isDeleted;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-    private List<Loan> loans;
+    private List<Borrow> borrows;
 
     @Version
     private Long version;

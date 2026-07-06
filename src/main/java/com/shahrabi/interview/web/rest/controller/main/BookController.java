@@ -12,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/api/v1/book")
@@ -36,7 +39,7 @@ public class BookController {
     }
 
     @GetMapping(value = "/{isbn}")
-    public ResponseEntity<BookDto.CommandBookDto> findByIsbn(String isbn) {
+    public ResponseEntity<BookDto.CommandBookDto> findByIsbn(@PathVariable String isbn) {
         BookDto.CommandBookDto bookDto = service.findByIsbn(isbn);
         return ResponseEntity.ok().body(bookDto);
     }
@@ -44,7 +47,12 @@ public class BookController {
     @PostMapping
     public ResponseEntity<BookDto.CommandBookDto> saveBook(@Valid @RequestBody BookDto.CommandBookDto bookDto) {
         BookDto.CommandBookDto savedDto = service.saveBook(bookDto);
-        return ResponseEntity.ok().body(savedDto);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{isbn}")
+                .buildAndExpand(savedDto.getIsbn())
+                .toUri();
+        return ResponseEntity.created(location).body(savedDto);
     }
 
     @PutMapping
@@ -55,9 +63,9 @@ public class BookController {
         return ResponseEntity.ok().body(updatedDto);
     }
 
-    @DeleteMapping(value = "/{isbnId}")
-    public ResponseEntity<Void> deleteById(@PathVariable String isbnId) {
-        service.deleteByIsbn(isbnId);
-        return ResponseEntity.ok().build();
+    @DeleteMapping(value = "/{isbn}")
+    public ResponseEntity<Void> deleteById(@PathVariable String isbn) {
+        service.deleteByIsbn(isbn);
+        return ResponseEntity.noContent().build();
     }
 }

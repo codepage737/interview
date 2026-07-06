@@ -152,7 +152,7 @@ class BookServiceImplUnitTest {
             Exception exception = assertThrows(BookAlreadyBorrowedException.class,
                     () -> bookService.deleteByIsbn(VALID_ISBN));
 
-            assertEquals("error.book.operation.active_loan", exception.getMessage());
+            assertEquals("error.book.operation.active_borrow", exception.getMessage());
         }
     }
 
@@ -179,7 +179,7 @@ class BookServiceImplUnitTest {
             Exception exception = assertThrows(BookAlreadyBorrowedException.class,
                     () -> bookService.markBookAsUnAvailableAndReturn(VALID_ISBN));
 
-            assertEquals("error.book.operation.active_loan", exception.getMessage());
+            assertEquals("error.book.operation.active_borrow", exception.getMessage());
         }
     }
 
@@ -206,7 +206,7 @@ class BookServiceImplUnitTest {
             Exception exception = assertThrows(BookNotBorrowedException.class,
                     () -> bookService.markBookAsAvailableAndReturn(VALID_ISBN));
 
-            assertEquals("error.book.operation.inactive_loan", exception.getMessage());
+            assertEquals("error.book.operation.inactive_borrow", exception.getMessage());
         }
     }
 }

@@ -62,12 +62,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteByIsbn(String isbnId) {
-        Book book = repository.findByIsbn(isbnId).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
+    public void deleteByIsbn(String isbn) {
+        Book book = repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
         if (book.getIsAvailable()) {
             book.setIsDeleted(Boolean.TRUE);
         } else {
-            throw new BookAlreadyBorrowedException("error.book.operation.active_loan");
+            throw new BookAlreadyBorrowedException("error.book.operation.active_borrow");
         }
     }
 
@@ -81,7 +81,7 @@ public class BookServiceImpl implements BookService {
     public BookDto.CommandBookDto markBookAsUnAvailableAndReturn(String isbn) {
         Book book = repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
         if (!book.getIsAvailable()) {
-            throw new BookAlreadyBorrowedException("error.book.operation.active_loan");
+            throw new BookAlreadyBorrowedException("error.book.operation.active_borrow");
         }
         if (book.getIsDeleted()) {
             throw new BookAlreadyDeletedException("error.book.operation.already_deleted");
@@ -94,7 +94,7 @@ public class BookServiceImpl implements BookService {
     public BookDto.CommandBookDto markBookAsAvailableAndReturn(String isbn) {
         Book book = repository.findByIsbn(isbn).orElseThrow(() -> new EntityNotFoundException("error.book.isbn.not_found"));
         if (book.getIsAvailable()) {
-            throw new BookNotBorrowedException("error.book.operation.inactive_loan");
+            throw new BookNotBorrowedException("error.book.operation.inactive_borrow");
         }
         book.setIsAvailable(Boolean.TRUE);
         return mapper.toDto(book);
